@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Security</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="loginForm">
+    Login:<input type="text" id="login"><br>
+    Pass:<input type="text" id="pass"><br>
+    <button id="btnLogin">Login</button>
+</div>
+
+    <button id="getDeserts">Get Desert</button>
+<script>
+        $("#btnLogin").click(function(){
+            var loginReq = {
+                login: $("#login").val(),
+                password: $("#pass").val()
+            };
+            $.ajax({
+                url:"http://localhost:8080/public/login",
+                type:"POST",
+                contentType: "application/json",
+                data: JSON.stringify(loginReq),
+                success:function(data){
+                    localStorage.setItem("authorityToken",data);
+                    alert("Welcome");
+                },
+                error:function (error) {
+                    alert("Error");
+                }
+            });
+        });
+        $("#getDeserts").click(function() {
+            $.ajax({
+                url: "http://localhost:8080/desert",
+                type: "GET",
+                contentType: "application/json",
+                headers:{token:"Bearer " + localStorage.getItem("authorityToken"),
+                "Access-Control-Allow-Origin": "http://localhost:8080/desert"
+                },
+                success: function (data) {
+                    console.log(data);
+                    alert("Welcome");
+                },
+                error: function (error) {
+                    alert("Error");
+                }
+            });
+        });
+</script>
+</body>
+</html>
